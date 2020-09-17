@@ -1,0 +1,14 @@
+def mock_response(response_data=None, response_code=201, raise_for_status=None):
+    response_mock = mock.MagicMock()
+    type(response_mock).status_code = mock.PropertyMock(return_value=response_code)
+    response_mock.json.return_value = response_data
+    response_mock.side_effect = raise_for_status
+    return response_mock
+
+@mock.patch('app.post_request')
+def test_update_policy(post_mock):
+    user_data = {'user':'abc'}
+    response_body = {'statues':'created'}
+    put_mock.return_value = mock_response(response_body, 200)
+    response = post_data(user_data)
+    assert response.status_code == 200
